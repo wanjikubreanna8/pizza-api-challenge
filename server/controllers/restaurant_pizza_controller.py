@@ -1,34 +1,36 @@
-from flask import Blueprint, jsonify, request
-from server.models.restaurant_pizza import RestaurantPizza
-from server.models.restaurant import Restaurant
-from server.models.pizza import Pizza
-from server import db
+from flask import Blueprint, request, jsonify
+from server.models import db, RestaurantPizza, Restaurant, Pizza
 
-restaurant_pizza_bp = Blueprint('restaurant_pizza', __name__)
+restaurant_pizza_bp = Blueprint('restaurant_pizza_bp', __name__, url_prefix='/restaurant_pizzas')
 
-@restaurant_pizza_bp.route('/restaurant_pizzas', methods=['POST'])
+
+@restaurant_pizza_bp.route('/', methods=['POST'])
 def create_restaurant_pizza():
     data = request.get_json()
-    
-    # Validate required fields
-    if not all(key in data for key in ['price', 'pizza_id', 'restaurant_id']):
-        return jsonify({"errors": ["Missing required fields"]}), 400
-    
-    # Check if restaurant and pizza exist
-    restaurant = Restaurant.query.get(data['restaurant_id'])
-    pizza = Pizza.query.get(data['pizza_id'])
-    
-    if not restaurant or not pizza:
-        return jsonify({"errors": ["Restaurant or Pizza not found"]}), 404
-    
-    try:
-        restaurant_pizza = RestaurantPizza()
-        restaurant_pizza.pizza_id = data['pizza_id']
-        restaurant_pizza.restaurant_id = data['restaurant_id']
-        restaurant_pizza.price = data['price']
-        db.session.add(restaurant_pizza)
-        db.session.commit()
-        return jsonify(restaurant_pizza.to_dict()), 201
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"errors": ["Validation error"]}), 400
+
+    price = data.get('price')
+    pizza_id = data.get('pizza_id')
+    restaurant_id = data.get('restaurant_id')
+
+    errors = []
+
+    if price is None:
+        errors.append("Price is required")
+    elif not isinstance(price, int) or price < 1 or price > 30:
+        errors.append("Price must be between 1 and 30")
+
+    if pizza_id is None or not Pizza.query.get(pizza_id):
+        errors.append("Valid pizza_id is required")
+
+    if restaurant_id is None or not Restaurant.query.get(restaurant_id):
+        errors.append("Valid restaurant_id is required")
+
+    if errors:
+        return jsonify({"errors": errors}), 400
+
+    new_rp = RestaurantPizza(price=price, pizza_id=pizza_id, restaurant_id=restaurant_id)
+
+    db.session.add(new_rp)
+    db.session.commit()
+
+    return jsonify(new_rp.to_dict()), 201

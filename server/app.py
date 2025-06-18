@@ -1,30 +1,24 @@
-from flask import Flask, jsonify
-from server import create_app
+from flask import Flask
+from flask_migrate import Migrate
+from server.models import db
 from server.controllers.restaurant_controller import restaurant_bp
 from server.controllers.pizza_controller import pizza_bp
 from server.controllers.restaurant_pizza_controller import restaurant_pizza_bp
 
-app = create_app()
+def create_app():
+    app = Flask(__name__)
+    
+    # Config - using SQLite here, change if you want
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///pizza_restaurant.db'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Register blueprints with URL prefixes
-app.register_blueprint(restaurant_bp, url_prefix='/api')
-app.register_blueprint(pizza_bp, url_prefix='/api')
-app.register_blueprint(restaurant_pizza_bp, url_prefix='/api')
+    # Initialize extensions
+    db.init_app(app)
+    Migrate(app, db)
 
-@app.route('/')
-def home():
-    return "Welcome to the Pizza Restaurant API!"
+    # Register Blueprints (Controllers)
+    app.register_blueprint(restaurant_bp)
+    app.register_blueprint(pizza_bp)
+    app.register_blueprint(restaurant_pizza_bp)
 
-@app.route('/api')
-def api_home():
-    return jsonify({
-        "message": "Welcome to the Pizza Restaurant API!",
-        "endpoints": {
-            "restaurants": "/api/restaurants",
-            "pizzas": "/api/pizzas",
-            "restaurant_pizzas": "/api/restaurant_pizzas"
-        }
-    })
-
-if __name__ == '__main__':
-    app.run(port=5555, debug=True)
+    return app
