@@ -11,24 +11,47 @@ with app.app_context():
     db.session.commit()
 
     # Create some restaurants
-    r1 = Restaurant(name="Kiki's Pizza", address="123 Main St")
-    r2 = Restaurant(name="Mario's Pizzeria", address="456 Elm St")
-    r3 = Restaurant(name="Luigi's Slice", address="789 Oak St")
+    r1 = Restaurant()
+    r1.name = "Kiki's Pizza"
+    r1.address = "123 Main St"
+    r2 = Restaurant()
+    r2.name = "Mario's Pizzeria"
+    r2.address = "456 Elm St"
+    r3 = Restaurant()
+    r3.name = "Luigi's Slice"
+    r3.address = "789 Oak St"
 
     db.session.add_all([r1, r2, r3])
 
     # Create some pizzas
-    p1 = Pizza(name="Emma", ingredients="Dough, Tomato Sauce, Cheese")
-    p2 = Pizza(name="Pepperoni", ingredients="Dough, Tomato Sauce, Cheese, Pepperoni")
-    p3 = Pizza(name="Veggie", ingredients="Dough, Tomato Sauce, Cheese, Peppers, Olives")
+    p1 = Pizza()
+    p1.name = "Emma"
+    p1.ingredients = "Dough, Tomato Sauce, Cheese"
+    p2 = Pizza()
+    p2.name = "Pepperoni"
+    p2.ingredients = "Dough, Tomato Sauce, Cheese, Pepperoni"
+    p3 = Pizza()
+    p3.name = "Veggie"
+    p3.ingredients = "Dough, Tomato Sauce, Cheese, Peppers, Olives"
 
     db.session.add_all([p1, p2, p3])
     db.session.commit()
 
     # Create some restaurant pizzas (join table entries)
-    rp1 = RestaurantPizza(price=10, pizza_id=p1.id, restaurant_id=r1.id)
-    rp2 = RestaurantPizza(price=15, pizza_id=p2.id, restaurant_id=r1.id)
-    rp3 = RestaurantPizza(price=12, pizza_id=p3.id, restaurant_id=r2.id)
+    rp1 = RestaurantPizza()
+    rp1.price = 10
+    rp1.pizza = p1
+    rp1.restaurant = r1
+
+    rp2 = RestaurantPizza()
+    rp2.price = 15
+    rp2.pizza = p2
+    rp2.restaurant = r1
+
+    rp3 = RestaurantPizza()
+    rp3.price = 12
+    rp3.pizza = p3
+    rp3.restaurant = r2
 
     db.session.add_all([rp1, rp2, rp3])
     db.session.commit()

@@ -17,7 +17,7 @@ def create_restaurant_pizza():
     if price is None:
         errors.append("Price is required")
     elif not isinstance(price, int) or price < 1 or price > 30:
-        errors.append("Price must be between 1 and 30")<11w3tw3rtqzcv wrh121345774
+        errors.append("Price must be between 1 and 30")
 
     if pizza_id is None or not Pizza.query.get(pizza_id):
         errors.append("Valid pizza_id is required")
@@ -28,7 +28,10 @@ def create_restaurant_pizza():
     if errors:
         return jsonify({"errors": errors}), 400
 
-    new_rp = RestaurantPizza(price=price, pizza_id=pizza_id, restaurant_id=restaurant_id)
+    new_rp = RestaurantPizza()
+    new_rp.price = price
+    new_rp.pizza_id = pizza_id
+    new_rp.restaurant_id = restaurant_id
 
     db.session.add(new_rp)
     db.session.commit()
