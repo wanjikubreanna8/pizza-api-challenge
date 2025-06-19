@@ -17,7 +17,7 @@ def create_restaurant_pizza():
     if price is None:
         errors.append("Price is required")
     elif not isinstance(price, int) or price < 1 or price > 30:
-        errors.append("Price must be between 1 and 30")
+        errors.append("Price must be between 1 and 30")<11w3tw3rtqzcv wrh121345774
 
     if pizza_id is None or not Pizza.query.get(pizza_id):
         errors.append("Valid pizza_id is required")
