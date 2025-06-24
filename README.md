@@ -26,8 +26,6 @@ This is a RESTful API built with *Flask, **SQLAlchemy, and **Flask-Migrate* for 
 └── README.md
 
 yaml
-Copy
-Edit
 
 ---
 
@@ -35,28 +33,21 @@ Edit
 
 ### 1. Clone and Install Dependencies
 
-```bash
-git clone https://github.com/your-username/pizza-api-challenge.git
+git clone https://github.com/wanjiku8/pizza-api-challenge.git
 cd pizza-api-challenge
 pipenv install flask flask_sqlalchemy flask_migrate
 pipenv shell
 2. Set Up Database
-bash
-Copy
-Edit
+
 
 flask db init
 flask db migrate -m "Initial migration"
 flask db upgrade
 3. Seed the Database
-bash
-Copy
-Edit
+
 python -m server.seed
 🚀 Run the Server
-bash
-Copy
-Edit
+
 export FLASK_APP=server.app:create_app
 flask run --port=5001
 Then visit: http://localhost:5001
@@ -67,9 +58,7 @@ Returns a list of all restaurants.
 
 Example Response:
 
-json
-Copy
-Edit
+
 [
   {
     "id": 1,
@@ -83,9 +72,6 @@ Returns a single restaurant and its pizzas.
 
 Example Response:
 
-json
-Copy
-Edit
 {
   "id": 1,
   "name": "Mario's Pizza",
@@ -101,9 +87,6 @@ Edit
 }
 If Not Found:
 
-json
-Copy
-Edit
 {
   "error": "Restaurant not found"
 }
@@ -116,9 +99,7 @@ Status Code: 204 No Content
 
 If Not Found:
 
-json
-Copy
-Edit
+
 {
   "error": "Restaurant not found"
 }
@@ -127,9 +108,6 @@ Returns a list of all pizzas.
 
 Example Response:
 
-json
-Copy
-Edit
 [
   {
     "id": 1,
@@ -143,9 +121,6 @@ Creates a new association between a pizza and restaurant.
 
 Request Body:
 
-json
-Copy
-Edit
 {
   "price": 5,
   "pizza_id": 1,
@@ -153,9 +128,7 @@ Edit
 }
 Success Response:
 
-json
-Copy
-Edit
+
 {
   "id": 4,
   "price": 5,
@@ -174,9 +147,7 @@ Edit
 }
 Error Response (400):
 
-json
-Copy
-Edit
+
 {
   "errors": ["Price must be between 1 and 30"]
 }
